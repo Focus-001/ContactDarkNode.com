@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>DarkNode - Anonyme & Sombre</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #00ff99;
+      font-family: monospace;
+      padding: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    input, textarea, button {
+      background: #111;
+      color: #0f0;
+      border: 1px solid #00ff99;
+      padding: 8px;
+      margin-top: 10px;
+      font-family: monospace;
+      width: 100%;
+      max-width: 500px;
+    }
+    button {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    button:hover {
+      background: #00ff99;
+      color: #000;
+    }
+    h1, h2 {
+      color: #00ffff;
+    }
+  </style>
+</head>
+<body onload="init()">
+
+  <!-- Zone de connexion -->
+  <div id="loginSection">
+    <h1>Bienvenue sur DarkNode</h1>
+    <p>Entrez votre pseudo pour commencer :</p>
+    <input type="text" id="pseudoInput" placeholder="Votre pseudo">
+    <button onclick="login()">Entrer</button>
+  </div>
+
+  <!-- Zone de message -->
+  <div id="chatSection" class="hidden">
+    <h2>Connecté en tant que : <span id="userPseudo"></span></h2>
+    <textarea id="messageInput" rows="5" placeholder="Écrivez votre message..."></textarea><br>
+    <button onclick="sendMessage()">Envoyer le message</button>
+    <p id="timerInfo" style="color: #ff5555;"></p>
+  </div>
+
+  <script>
+    const webhookURL = "https://your-webhook-url.com"; // 🔁 Remplace par ton lien webhook
+    const waitTime = 60000; // 1 minute en millisecondes
+
+    function init() {
+      const pseudo = localStorage.getItem("pseudo");
+      if (pseudo) {
+        document.getElementById("pseudoInput").value = pseudo;
+        showChat(pseudo);
+      }
+    }
+
+    function login() {
+      const pseudo = document.getElementById("pseudoInput").value.trim();
+      if (!pseudo) {
+        alert("Veuillez entrer un pseudo.");
+        return;
+      }
+      localStorage.setItem("pseudo", pseudo);
+      showChat(pseudo);
+    }
+
+    function showChat(pseudo) {
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("chatSection").classList.remove("hidden");
+      document.getElementById("userPseudo").textContent = pseudo;
+    }
+
+    function sendMessage() {
+      const lastSent = localStorage.getItem("lastSent");
+      const now = Date.now();
+
+      if (lastSent && now - lastSent < waitTime) {
+        const secondsLeft = Math.ceil((waitTime - (now - lastSent)) / 1000);
+        document.getElementById("timerInfo").textContent = `⏳ Attendez encore ${secondsLeft} seconde(s)...`;
+        return;
+      }
+
+      const pseudo = localStorage.getItem("pseudo");
+      const msg = document.getElementById("messageInput").value.trim();
+      if (!msg) {
+        alert("Le message est vide.");
+        return;
+      }
+
+      fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: `[${pseudo}] ${msg}` })
+      }).then(() => {
+        document.getElementById("messageInput").value = "";
+        localStorage.setItem("lastSent", Date.now());
+        document.getElementById("timerInfo").textContent = "✅ Message envoyé !";
+      }).catch(() => {
+        alert("❌ Échec de l'envoi.");
+      });
+    }
+  </script>
+
+</body>
+</html>
