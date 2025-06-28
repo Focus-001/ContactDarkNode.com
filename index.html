@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>DarkNode - Anonyme & Sombre</title>
+  <title>DarkNode - Contact</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -39,7 +39,6 @@
 </head>
 <body onload="init()">
 
-  <!-- Zone de connexion -->
   <div id="loginSection">
     <h1>Bienvenue sur DarkNode</h1>
     <p>Entrez votre pseudo pour commencer :</p>
@@ -47,7 +46,6 @@
     <button onclick="login()">Entrer</button>
   </div>
 
-  <!-- Zone de message -->
   <div id="chatSection" class="hidden">
     <h2>Connecté en tant que : <span id="userPseudo"></span></h2>
     <textarea id="messageInput" rows="5" placeholder="Écrivez votre message..."></textarea><br>
@@ -56,8 +54,8 @@
   </div>
 
   <script>
-    const webhookURL = "https://your-webhook-url.com"; // 🔁 Remplace par ton lien webhook
-    const waitTime = 60000; // 1 minute en millisecondes
+    const webhookURL = "https://discord.com/api/webhooks/1388604489929457674/mPkiDf-Ppd9ZJtpGUbCx4fiqLQ2m30IZ-LAWVqdkFWUKKhC-fbNLx7ce4voYm1iEQQY_";
+    const waitTime = 60000;
 
     function init() {
       const pseudo = localStorage.getItem("pseudo");
